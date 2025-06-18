@@ -47,7 +47,6 @@ class Agent:
     
     def ask(self, user_input: str,stop:str = "Observation:") -> str:
         logger.info(f"User input: {user_input}")
-        compteur = 0
         if not user_input:
             raise ValueError("User input cannot be empty.")
         self.memory.append({"role": "user", "content": user_input})
