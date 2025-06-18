@@ -40,3 +40,7 @@ curl "http://localhost:8000/ask?prompt=Quelle+est+la+meteo+a+Paris%3F"
 ```
 
 Cette requête renverra la réponse générée par l'agent.
+
+## Licence
+
+Ce projet est distribue sous licence MIT. Voir le fichier [LICENSE](LICENSE) pour plus d'informations.
