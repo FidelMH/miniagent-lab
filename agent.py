@@ -54,7 +54,7 @@ class Agent:
         while True:
             assistant_reply = self._chat()
             logger.info(f"Assistant reply: {assistant_reply}")
-            print(f"Assistant reply: {assistant_reply}")
+            logger.debug(f"Assistant reply: {assistant_reply}")
             self.memory.append({"role": "assistant", "content": assistant_reply})
             if "Final Answer:" in assistant_reply:
                 logger.info("Final answer detected in the response.")
