@@ -101,7 +101,7 @@ class FakesearchTool(Tool):
         if not query:
             return "No query provided for fake search."
         if 'capital of france' in query.lower():
-            return "The capital of France is Paris sa mère."
+            return "The capital of France is Paris."
         if 'bocchi the rock' in query.lower():
             return "Bocchi the Rock is a popular anime about a girl who struggles with social anxiety but finds friends "
         return "No results found for your query."
