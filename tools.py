@@ -1,5 +1,36 @@
 from tool import Tool
 import requests
+import ast
+import operator
+
+
+SAFE_OPERATORS = {
+    ast.Add: operator.add,
+    ast.Sub: operator.sub,
+    ast.Mult: operator.mul,
+    ast.Div: operator.truediv,
+    ast.Pow: operator.pow,
+    ast.Mod: operator.mod,
+    ast.USub: operator.neg,
+    ast.UAdd: operator.pos,
+    ast.FloorDiv: operator.floordiv,
+}
+
+
+def safe_eval(expr: str):
+    """Safely evaluate a simple arithmetic expression."""
+
+    def _eval(node):
+        if isinstance(node, ast.Num):  # type: ignore[attr-defined]
+            return node.n
+        if isinstance(node, ast.BinOp) and type(node.op) in SAFE_OPERATORS:
+            return SAFE_OPERATORS[type(node.op)](_eval(node.left), _eval(node.right))
+        if isinstance(node, ast.UnaryOp) and type(node.op) in SAFE_OPERATORS:
+            return SAFE_OPERATORS[type(node.op)](_eval(node.operand))
+        raise ValueError("Unsupported expression")
+
+    tree = ast.parse(expr, mode="eval")
+    return _eval(tree.body)
 
 
 
@@ -49,8 +80,7 @@ class CalculatorTool(Tool):
             expr (str): The expression to evaluate, e.g., "2 + 2" or "3 * (4 - 1)".
         """
         try:
-            result = eval(expr)
-            
+            result = safe_eval(expr)
             return str(result)
         except Exception as e:
             raise Exception(f"Calculation failed: {str(e)}")
