@@ -113,21 +113,27 @@ class WeatherTool(Tool):
         self.name = name
         self.api_key = api_key
 
-    def run(self, args: str) -> str:
-        """
-        Fetch the current weather for the given location.
+    def run(self, args):
+        """Fetch the current weather for the given location.
+
         Args:
-            args (str): The location to fetch the weather for.
+            args (str | dict): Either the location as a string or a dictionary
+                containing a ``location`` field.
         """
-        response = requests.get(f"https://api.openweathermap.org/data/2.5/weather",
+        if isinstance(args, dict):
+            location = args.get("location", "")
+        else:
+            location = args
+        response = requests.get(
+            f"https://api.openweathermap.org/data/2.5/weather",
             params={
-                "q": args,
+                "q": location,
                 "appid": self.api_key,
                 "units": "metric"  # Use metric units for temperature
             }
-            
+
         )
         if response.status_code != 200:
             raise Exception(f"Weather API request failed with status code {response.status_code}: {response.text}")
         data = response.json()
-        return f"The current temperature in {args} is {data['main']['temp']}°C with {data['weather'][0]['description']}."
+        return f"The current temperature in {location} is {data['main']['temp']}°C with {data['weather'][0]['description']}."
