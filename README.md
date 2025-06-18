@@ -17,13 +17,15 @@ Ce dépôt illustre la mise en place d'un "agent" simple utilisant des outils po
 
 Ces variables sont chargées par `config.py` et sont nécessaires au démarrage de l'application.
 
+Un fichier `.env.example` est fourni à la racine du projet et peut être copié en `.env` pour servir de modèle.
+
 ## Installation et lancement
 
 1. Installer les dépendances :
    ```bash
    pip install -r requirements.txt
    ```
-2. Exporter les variables d'environnement requises (ou les placer dans un fichier `.env`).
+2. Copiez le fichier `.env.example` en `.env` puis renseignez vos clés (ou exportez les variables manuellement).
 3. Lancer l'application FastAPI avec Uvicorn :
    ```bash
    uvicorn main:app --reload
