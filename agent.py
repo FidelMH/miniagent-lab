@@ -45,7 +45,7 @@ class Agent:
         ]
         self.tools: Dict[str, Tool] = {}
     
-    def ask(self, user_input: str,stop:str = "Observation:") -> str:
+    def ask(self, user_input: str) -> str:
         logger.info(f"User input: {user_input}")
         if not user_input:
             raise ValueError("User input cannot be empty.")
