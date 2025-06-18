@@ -1,8 +1,7 @@
 from agent import Agent
 from tools import FakesearchTool, WeatherTool
 from fastapi import FastAPI
-from config import GOOGLE_API_KEY, GOOGLE_CSE_ID, OPENWEATHER_API_KEY
-from models import SearchResult,SearchResume
+from config import OPENWEATHER_API_KEY
 import yaml
 app = FastAPI()
 
