@@ -60,9 +60,11 @@ class Agent:
                 logger.info("Final answer detected in the response.")
                 # If the response contains "Final Answer:", we assume it's the end of the conversation
                 return assistant_reply.split("Final Answer:")[-1].strip()
-            json_blob = self._extract_json(assistant_reply)
-            if not json_blob:
-                raise ValueError("No valid JSON found in the response.")
+            try:
+                json_blob = self._extract_json(assistant_reply)
+            except ValueError as e:
+                logger.error(str(e))
+                raise ValueError("No valid JSON found in the response.") from e
             # If a JSON blob is found, we execute the tool
             try:
                 result = self.execute_tool(json_blob)
@@ -104,11 +106,16 @@ class Agent:
         else:
             raise ValueError(f"Tool '{action}' not found.")
         
-    def _extract_json(self, text: str) -> Optional[dict]:
+    def _extract_json(self, text: str) -> dict:
         match = re.search(r"```json\s*(\{.*?\})\s*```", text, re.DOTALL)
-        if match:
-            try:
-                return json.loads(match.group(1))
-            except json.JSONDecodeError:
-                return None
-        return None
+        if not match:
+            raise ValueError("No JSON block found in the text.")
+        json_text = match.group(1)
+        try:
+            return json.loads(json_text)
+        except json.JSONDecodeError as e:
+            logger.error(
+                f"JSON decoding failed for text: {json_text}",
+                exc_info=e,
+            )
+            raise ValueError(f"Invalid JSON content: {e.msg}") from e
