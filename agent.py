@@ -45,13 +45,24 @@ class Agent:
         ]
         self.tools: Dict[str, Tool] = {}
     
-    def ask(self, user_input: str) -> str:
+    def ask(self, user_input: str, max_steps: int = 10) -> str:
+        """Send a prompt to the agent and return its final answer.
+
+        Parameters
+        ----------
+        user_input : str
+            The question or instruction for the agent.
+        max_steps : int, optional
+            Maximum number of interaction cycles allowed before aborting. Defaults to 10.
+        """
+
         logger.info(f"User input: {user_input}")
         if not user_input:
             raise ValueError("User input cannot be empty.")
         self.memory.append({"role": "user", "content": user_input})
-        
-        while True:
+
+        steps = 0
+        while steps < max_steps:
             assistant_reply = self._chat()
             logger.info(f"Assistant reply: {assistant_reply}")
             print(f"Assistant reply: {assistant_reply}")
@@ -71,7 +82,13 @@ class Agent:
             except ValueError as e:
                 # If the tool execution fails, we continue the conversation
                 self.memory.append({"role": "error", "content": str(e)})
+                steps += 1
                 continue
+            steps += 1
+
+        raise RuntimeError(
+            f"Maximum number of steps ({max_steps}) exceeded without a final answer."
+        )
   
 
     def _chat(self) -> str:
