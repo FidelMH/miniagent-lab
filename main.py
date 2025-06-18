@@ -28,10 +28,6 @@ AGENT.register_tool(weather_tool)
 
 
 @app.get("/ask")
-def generate(prompt: str):
-    """
-    Generate a response based on the provided prompt.
-    """ 
-     
-    return AGENT.ask(prompt) 
+async def generate(prompt: str):
+    return AGENT.ask(prompt)
 
