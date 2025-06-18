@@ -1,5 +1,5 @@
 from agent import Agent
-from tools import GoogleSearchTool, FakesearchTool,WeatherTool
+from tools import FakesearchTool, WeatherTool
 from fastapi import FastAPI
 from config import GOOGLE_API_KEY, GOOGLE_CSE_ID, OPENWEATHER_API_KEY
 from models import SearchResult,SearchResume
