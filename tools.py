@@ -73,12 +73,15 @@ class CalculatorTool(Tool):
         super().__init__(name)
         self.name = name
 
-    def run(self, expr: str) -> str:
+    def run(self, args: dict) -> str:
         """
         Perform a calculation based on the provided arguments.
         Args:
             expr (str): The expression to evaluate, e.g., "2 + 2" or "3 * (4 - 1)".
         """
+        expr :str = args.get("expression", "")
+        if not expr:
+            return "No expression provided for calculation."
         try:
             result = safe_eval(expr)
             return str(result)
@@ -137,3 +140,28 @@ class WeatherTool(Tool):
             raise Exception(f"Weather API request failed with status code {response.status_code}: {response.text}")
         data = response.json()
         return f"The current temperature in {location} is {data['main']['temp']}°C with {data['weather'][0]['description']}."
+
+class DefineWordTool(Tool):
+    """Tool for defining a word."""
+    def __init__(self, name: str):
+        super().__init__(name)
+        self.name = name
+
+    def run(self, args: dict) -> str:
+        """Fetch the definition of a word."""
+        word = args.get("word", "")
+        if not word:
+            return "No word provided for definition."
+        response = requests.get(
+            f"https://api.dictionaryapi.dev/api/v2/entries/en/{word}"
+        )
+        if response.status_code != 200:
+            raise Exception(f"Dictionary API request failed with status code {response.status_code}: {response.text}")
+        data = response.json()
+        if isinstance(data, list) and len(data) > 0:
+            definitions = data[0].get("meanings", [])
+            if definitions:
+                return f"Definitions for '{word}': " + ", ".join(
+                    [f"{meaning['partOfSpeech']}: {meaning['definitions'][0]['definition']}" for meaning in definitions]
+                )
+        return f"No definitions found for '{word}'."

@@ -1,5 +1,5 @@
 from agent import Agent
-from tools import FakesearchTool, WeatherTool
+from tools import FakesearchTool, WeatherTool,CalculatorTool,DefineWordTool
 from fastapi import FastAPI
 from config import OPENWEATHER_API_KEY
 import yaml
@@ -18,12 +18,14 @@ AGENT = Agent(
     provider="ollama",
 )
 
- 
+calculator_tool = CalculatorTool("calculator")
 fake_search_tool = FakesearchTool("fakesearch")
 weather_tool = WeatherTool("weather", OPENWEATHER_API_KEY)
-
+define_word = DefineWordTool("define_word")
 AGENT.register_tool(fake_search_tool,)
 AGENT.register_tool(weather_tool)
+AGENT.register_tool(calculator_tool)
+AGENT.register_tool(define_word)
 
 
 @app.get("/ask")

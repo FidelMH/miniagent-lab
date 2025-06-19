@@ -3,6 +3,8 @@
 
   fakesearch: A tool to search the web for information.
   weather: A tool to get the current weather in a specific location.
+  calculataor: A tool to perform calculations.
+  define_word: A tool to get the definition of a word.
 
   The way  you use the tools is by specifying a json blob.
   Specefically this json should have  an 'action' key ( with the name of the tool to use) and an 'action_input' key (with the input to the tool going here).
@@ -10,9 +12,13 @@
   The only values that should be in the "action" field are:
   fakesearch: Get the latest information from the web, args: { "query": "string" }
   weather: Get the current weather, args: { "location": "string" }
+  calculator: Perform a calculation, args: { "expression": "string" }
+  define_word: Get the definition of a word, args: { "word": "string" }
   exemple use:
-
+  ---
   fakesearch:
+
+  Task: Answer the question using the tools available to you.
   ```json
   {
     "action": "fakesearch",
@@ -27,7 +33,20 @@
     "action_input": {"location": "New York City"}
   }
   ```
+  calculataor:
+  ```json
+  {
+    "action": "calculator",
+    "action_input": {"expression": "2 + 2"}
+  }
 
+  define_word:
+  ```json
+  {
+    "action": "define_word",
+    "action_input": {"word": "serendipity"}
+  }
+  ```
   NEVER invent the Observation. The system will provide it
   NEVER add trailing commas in your JSON.
   ALWAYS ensure your JSON is valid and parseable.
@@ -45,4 +64,9 @@
   You must always end your output with the following format:
   Tought: I now know the final answer
   Final Answer: the final answer to the original input question
+  When the define_word tool is used, the final answer should have the format: word: definition
+  exemple:
+  Question: What is the definition of serendipity?
+  Final Answer: serendipity: the occurrence of events by chance in a happy or beneficial way
+  
   Now begin! Reminder to ALWAYS use the exact charaters 'Final Answer:' when you provide a definitive answer.
